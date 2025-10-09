@@ -1,0 +1,26 @@
+{
+  "name": "taskmanagerplus-ui-tests",
+  "version": "1.0.0",
+  "description": "UI automated tests for TaskManagerPlus using Playwright and TypeScript (POM). Generates JSON reports for AI analysis.",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rimraf test-results reports/ui",
+    "test": "playwright test",
+    "test:ci": "npm run clean && playwright test"
+  },
+  "keywords": [
+    "qa",
+    "playwright",
+    "typescript",
+    "automation",
+    "ui-tests",
+    "taskmanagerplus"
+  ],
+  "author": "Maicon Fang",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.53.2",
+    "@types/node": "^24.7.0",
+    "rimraf": "^6.0.1"
+  }
+}

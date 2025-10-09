@@ -1,0 +1,26 @@
+# Dependências e binários
+node_modules/
+dist/
+
+# Arquivos de ambiente
+.env
+
+# Logs
+*.log
+
+# Configurações de IDE
+.vscode/
+
+# Artifacts do Playwright
+.playwright/
+test-results/
+
+# Outros
+.DS_Store
+
+node_modules/
+test-results/
+reports/
+*.log
+*.tmp
+.DS_Store
