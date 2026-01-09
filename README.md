@@ -13,6 +13,10 @@ These tests validate the main user flows, such as login and navigation, and gene
 - **Reports:** JSON format (stored in `reports/ui/playwright-report.json`)
 - **Purpose:** Provide reliable, maintainable automated UI tests for TaskManagerPlus and feed data to AI-driven analysis.
 
+
+## Run test
+PS C:\Desenvolvimento\workspace\taskmanagerplus-tests\ui-tests\tests> npx playwright test
+
 ---
 
 ## ⚙️ Project Structure

@@ -2,39 +2,56 @@ import { defineConfig, devices } from '@playwright/test';
 import { join } from 'path';
 
 export default defineConfig({
-  // Diretório onde ficam os testes
+  // Directory where all test files are located
   testDir: './tests',
 
-  // Tempo máximo por teste (30s)
+  // Maximum execution time allowed for each test (30 seconds)
   timeout: 30 * 1000,
 
-  // Onde salvar relatórios e traces
+  // Reporters configuration:
+  // - 'line' prints test results directly in the terminal
+  // - 'json' generates a JSON report used for further analysis or automation
   reporter: [
-    ['line'], // mostra no terminal
+    ['line'], // displays test execution progress in the terminal
     ['json', { outputFile: join(__dirname, 'reports/ui/playwright-report.json') }]
   ],
 
-  // Configurações padrão dos testes
+  // Default settings applied to all tests
   use: {
-    headless: true,                 // roda em modo headless (sem abrir o browser)
-    screenshot: 'only-on-failure',  // tira screenshot só quando falha
-    video: 'retain-on-failure',     // grava vídeo se falhar
-    trace: 'on',                    // salva trace para debug
+    // Runs tests without opening a visible browser window (faster and CI-friendly)
+    headless: true,
+
+    // Takes a screenshot only when a test fails, helping with debugging
+    screenshot: 'only-on-failure',
+
+    // Records a video only if the test fails
+    video: 'retain-on-failure',
+
+    // Collects Playwright trace data for every test,
+    // allowing step-by-step inspection when debugging failures
+    trace: 'on',
+
+    // Base URL used by page.goto() calls
+    // Can be overridden using an environment variable
     baseURL: process.env.BASE_URL || 'http://localhost:4200'
   },
 
-  // Projetos: roda nos 3 navegadores principais
+  // Test projects configuration:
+  // Runs the same test suite across the main browsers
   projects: [
     {
       name: 'chromium',
+      // Desktop Chrome configuration
       use: { ...devices['Desktop Chrome'] },
     },
     {
       name: 'firefox',
+      // Desktop Firefox configuration
       use: { ...devices['Desktop Firefox'] },
     },
     {
       name: 'webkit',
+      // Desktop Safari configuration
       use: { ...devices['Desktop Safari'] },
     },
   ],
