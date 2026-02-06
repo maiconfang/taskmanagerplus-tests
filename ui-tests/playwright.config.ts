@@ -33,7 +33,8 @@ export default defineConfig({
 
     // Base URL used by page.goto() calls
     // Can be overridden using an environment variable
-    baseURL: process.env.BASE_URL || 'http://localhost:4200'
+    // baseURL: process.env.BASE_URL || 'http://localhost:4200'
+    baseURL: process.env.BASE_URL || 'http://192.168.2.12:4200'
   },
 
   // Test projects configuration:
