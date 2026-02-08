@@ -1,10 +1,10 @@
 import { Page, Locator, expect } from '@playwright/test';
+import { testConfig } from '../config/testConfig';
 
 export class LoginPage {
   readonly page: Page;
 
-  // URLs
-  readonly baseURL = 'http://192.168.2.12:4200';
+  // Route
   readonly loginRoute = '/#/login';
 
   // Locators (centralizados)
@@ -23,13 +23,13 @@ export class LoginPage {
   }
 
   async navigate() {
-    await this.page.goto(`${this.baseURL}${this.loginRoute}`);
+    await this.page.goto(`${testConfig.baseUrl}${this.loginRoute}`, { waitUntil: 'domcontentloaded' });
     await this.expectLoginPageReady();
   }
 
   // "Ready check" (ajuda muito a evitar timeout/flakiness)
   async expectLoginPageReady() {
-    await expect(this.page).toHaveURL(`${this.baseURL}${this.loginRoute}`);
+    await expect(this.page).toHaveURL(`${testConfig.baseUrl}${this.loginRoute}`);
     await expect(this.title).toBeVisible();
     await expect(this.loginInput).toBeVisible();
     await expect(this.passwordInput).toBeVisible();
@@ -96,15 +96,12 @@ export class LoginPage {
   }
 
   async logout() {
-  const logoutButton = this.page.locator('#btn-logout');
+    const logoutButton = this.page.locator('#btn-logout');
 
-  await expect(logoutButton).toBeVisible();
-  await expect(logoutButton).toBeEnabled();
+    await expect(logoutButton).toBeVisible();
+    await expect(logoutButton).toBeEnabled();
 
-  await logoutButton.scrollIntoViewIfNeeded();
-
-  await logoutButton.click();
-}
-
-
+    await logoutButton.scrollIntoViewIfNeeded();
+    await logoutButton.click();
+  }
 }

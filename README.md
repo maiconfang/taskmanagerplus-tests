@@ -30,7 +30,10 @@ taskmanagerplus-tests/
 ├── ui-tests/            # Playwright UI tests
 │   ├── tests/           # Test scenarios
 │   ├── pages/           # Page Objects
-│   └── reports/         # Playwright reports (JSON/HTML)
+│   ├── components/      # Reusable UI components
+│   ├── config/          # Test configuration
+│   ├── reports/         # Playwright reports (JSON/HTML)
+│   └── .auth/            # Saved login session (ignored by Git)
 │
 ├── api-tests/           # API test suite
 │
@@ -69,18 +72,95 @@ npx playwright install
 
 ---
 
+## 🔐 Authentication (Login Once – Session Reuse)
+
+UI tests use **Playwright storageState** to avoid logging in on every test.
+
+The login is executed once and saved locally.
+
+### ✅ First Run (Generate Session)
+
+```powershell
+$env:APP_BASE_URL="http://192.168.2.12:4200"
+$env:E2E_USER="luna.moon@maif.com"
+$env:E2E_PASS="123"
+
+npx playwright test
+```
+
+This creates:
+
+```
+ui-tests/.auth/storageState.json
+```
+
+---
+
+### ▶️ Normal Execution (Reuse Session)
+
+After the file exists, just run:
+
+```bash
+npx playwright test
+```
+
+All tests will start already authenticated.
+
+---
+
+### ♻️ When Session Expires
+
+If tests redirect to login again:
+
+1. Delete:
+```
+ui-tests/.auth/storageState.json
+```
+
+2. Run:
+```bash
+npx playwright test
+```
+
+A new session will be generated automatically.
+
+---
+
+### 🌍 Change Environment / User (Optional)
+
+Change server:
+
+```powershell
+$env:APP_BASE_URL="http://192.168.1.50:4200"
+```
+
+Change user:
+
+```powershell
+$env:E2E_USER="admin@test.com"
+$env:E2E_PASS="123456"
+```
+
+---
+
 ## ▶️ Running Tests
 
 ### 🖥️ UI Tests
 
 ```bash
-npm run test:ui
+npx playwright test
 ```
 
-Or directly:
+With debug:
 
 ```bash
-npx playwright test
+npm run test:debug
+```
+
+Run specific test:
+
+```bash
+npm run test:province
 ```
 
 ---
