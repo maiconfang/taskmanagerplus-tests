@@ -83,11 +83,10 @@ export class ProvincePage extends BasePage {
     await this.nameInput.fill(newName);
     await this.crud.clickSave();
 
-    await this.expectToastMessage('Successfully Updated');
-
     await this.crud.backToSearch();
     await this.expectLoaded();
   }
+
 
   async expectProvinceInTable(name: string): Promise<void> {
     const row = this.page.locator('tbody tr', { hasText: name }).first();
@@ -105,5 +104,13 @@ export class ProvincePage extends BasePage {
     await expect(toast).toContainText(expectedText);
 
     await toast.waitFor({ state: 'hidden', timeout: 10000 });
+  }
+
+  // Add this inside ProvincePage class
+  async expectSuccessToast(message: string | RegExp) {
+    const toast = this.page.locator('div[role="alert"].toast-message');
+
+    await expect(toast).toBeVisible({ timeout: 5000 });
+    await expect(toast).toContainText(message);
   }
 }

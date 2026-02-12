@@ -1,5 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 import { join } from 'path';
+import path from 'path';
 
 export default defineConfig({
   testDir: './tests',
@@ -24,7 +25,7 @@ export default defineConfig({
     baseURL: process.env.APP_BASE_URL || 'http://192.168.2.12:4200',
 
     // Reuse the logged-in session for all tests
-    storageState: process.env.AUTH_STATE_PATH || '.auth/storageState.json',
+    storageState: path.resolve(__dirname, '.auth/storageState.json')
   },
 
   projects: [

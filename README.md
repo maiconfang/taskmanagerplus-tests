@@ -1,86 +1,93 @@
-# ✅ TaskManagerPlus – Automated Tests (UI & API)
+# ✅ TaskManagerPlus -- Automated Tests (UI + API + AI Integration)
 
-This repository contains the automated test suite for the **TaskManagerPlus ecosystem**, covering:
+This repository contains the automated test suite for the
+**TaskManagerPlus ecosystem**, covering:
 
-- 🖥️ End-to-End UI Tests (Playwright)
-- 🔌 API Tests
-- 📊 Execution Reports
-- 🤖 AI-powered Analysis (via taskmanagerplus-ai-analyzer)
+-   🖥️ End-to-End UI Tests (Playwright)
+-   🔌 API-driven test setup & cleanup
+-   📊 Execution Reports (HTML + JSON + Trace)
+-   🤖 AI-powered Analysis (via taskmanagerplus-ai-analyzer)
 
-It is designed as a **portfolio-ready QA automation project**, focused on real execution, traceability, and evidence-based testing.
+It is designed as a **portfolio-ready QA automation project**, focused
+on real execution, architectural maturity, and evidence-based testing.
 
----
+------------------------------------------------------------------------
 
 ## 🚀 Tech Stack
 
-- Playwright (TypeScript)
-- Node.js
-- REST API Testing
-- GitHub Actions (CI-ready)
-- HTML & JSON Reports
-- AI Analysis Integration
+-   Playwright (TypeScript)
+-   Node.js
+-   REST API (OAuth2 authentication)
+-   HTML & JSON Reports
+-   Trace Viewer
+-   AI Analysis Integration (OpenAI-powered)
 
----
+------------------------------------------------------------------------
 
 ## 📁 Project Structure
 
-```
-taskmanagerplus-tests/
-│
-├── ui-tests/            # Playwright UI tests
-│   ├── tests/           # Test scenarios
-│   ├── pages/           # Page Objects
-│   ├── components/      # Reusable UI components
-│   ├── config/          # Test configuration
-│   ├── reports/         # Playwright reports (JSON/HTML)
-│   └── .auth/            # Saved login session (ignored by Git)
-│
-├── api-tests/           # API test suite
-│
-├── test-results/        # Playwright execution artifacts
-│
-├── scripts/             # Utility scripts
-│
-└── README.md
-```
+    taskmanagerplus-tests/
+    │
+    ├── ui-tests/
+    │   ├── tests/
+    │   │    └── province/                # Domain-based test organization
+    │   │         province.navigation.spec.ts
+    │   │         province.edit.api.spec.ts
+    │   │         province.create.api.spec.ts
+    │   │         province.delete.api.spec.ts
+    │   │         province.ui-legacy.spec.ts
+    │   │
+    │   ├── pages/                        # Page Objects
+    │   ├── components/                   # Reusable UI components
+    │   ├── api/                          # API clients (setup & cleanup)
+    │   │    authClient.ts
+    │   │    provinceClient.ts
+    │   │
+    │   ├── config/                       # Test configuration
+    │   ├── reports/                      # Playwright reports
+    │   └── .auth/                        # Saved login session (ignored by Git)
+    │
+    ├── test-results/                     # Execution artifacts
+    │
+    ├── global-setup.ts
+    ├── playwright.config.ts
+    └── README.md
 
----
+> ⚠️ Note: There is no separate `api-tests/` folder.\
+> API calls are used strategically to prepare and clean test data for UI
+> tests.
 
-## ⚙️ Installation
+------------------------------------------------------------------------
 
-### 1️⃣ Prerequisites
+## 🏗️ Architecture Strategy
 
-- Node.js 18+
-- Git
-- Chrome / Edge (for Playwright)
+### 🔌 API-Driven Setup Pattern
 
----
+Instead of creating test data via UI (slow and flaky), tests use:
 
-### 2️⃣ Install Dependencies
+-   OAuth2 authentication via API
+-   Token caching
+-   Direct entity creation before test execution
+-   Automatic cleanup after execution
 
-```bash
-npm install
-```
+This ensures:
 
----
+✔ Faster execution\
+✔ Reduced UI flakiness\
+✔ Independent tests\
+✔ Cleaner environment\
+✔ Enterprise-level stability
 
-### 3️⃣ Install Playwright Browsers
+------------------------------------------------------------------------
 
-```bash
-npx playwright install
-```
+## 🔐 Authentication (Login Once -- Session Reuse)
 
----
+UI tests use **Playwright storageState** to avoid logging in on every
+test.
 
-## 🔐 Authentication (Login Once – Session Reuse)
+### First Run (Generate Session)
 
-UI tests use **Playwright storageState** to avoid logging in on every test.
-
-The login is executed once and saved locally.
-
-### ✅ First Run (Generate Session)
-
-```powershell
+``` powershell
 $env:APP_BASE_URL="http://192.168.2.12:4200"
 $env:E2E_USER="luna.moon@maif.com"
 $env:E2E_PASS="123"
@@ -88,178 +95,154 @@ $env:E2E_PASS="123"
 npx playwright test
 ```
 
-This creates:
+This generates:
 
-```
-ui-tests/.auth/storageState.json
-```
+    ui-tests/.auth/storageState.json
 
----
+------------------------------------------------------------------------
 
-### ▶️ Normal Execution (Reuse Session)
+### Normal Execution
 
-After the file exists, just run:
-
-```bash
+``` bash
 npx playwright test
 ```
 
-All tests will start already authenticated.
+If session expires:
 
----
+1.  Delete `.auth/storageState.json`
+2.  Run tests again
 
-### ♻️ When Session Expires
-
-If tests redirect to login again:
-
-1. Delete:
-```
-ui-tests/.auth/storageState.json
-```
-
-2. Run:
-```bash
-npx playwright test
-```
-
-A new session will be generated automatically.
-
----
-
-### 🌍 Change Environment / User (Optional)
-
-Change server:
-
-```powershell
-$env:APP_BASE_URL="http://192.168.1.50:4200"
-```
-
-Change user:
-
-```powershell
-$env:E2E_USER="admin@test.com"
-$env:E2E_PASS="123456"
-```
-
----
+------------------------------------------------------------------------
 
 ## ▶️ Running Tests
 
-### 🖥️ UI Tests
+Run all UI tests:
 
-```bash
+``` bash
 npx playwright test
-```
-
-With debug:
-
-```bash
-npm run test:debug
 ```
 
 Run specific test:
 
-```bash
-npm run test:province
+``` bash
+npx playwright test tests/province/province.edit.api.spec.ts
 ```
 
----
+Run with debug:
 
-### 🔌 API Tests
-
-```bash
-npm run test:api
+``` bash
+npx playwright test --debug
 ```
 
----
+------------------------------------------------------------------------
 
 ## 📊 Reports
 
 After execution, Playwright generates:
 
-- 📄 HTML Report
-- 📄 JSON Report
-- 📂 Trace files
+-   📄 HTML Report
+-   📄 JSON Report
+-   📂 Trace files
 
-Open the HTML report:
+Open report:
 
-```bash
+``` bash
 npx playwright show-report
 ```
 
----
+------------------------------------------------------------------------
 
-## 🤖 AI Analysis (Optional)
+# 🤖 AI Analysis Integration
 
 This project integrates with:
 
 ➡️ **taskmanagerplus-ai-analyzer**
 
-Which can:
+The analyzer processes real Playwright JSON reports and produces:
 
-- Detect root causes
-- Identify flaky tests
-- Generate insights
-- Suggest new test cases
+-   Root cause analysis
+-   Flakiness detection
+-   Evidence-based insights
+-   Suggested new test cases
+-   Structured Markdown & JSON outputs
+-   Snapshot-based portfolio proof
 
-Example:
+------------------------------------------------------------------------
 
-```bash
+## 🧠 Example: Run AI Analysis
+
+``` bash
 npm run analyze:real:openai -- "<path>/playwright-report.json"
 ```
 
----
+------------------------------------------------------------------------
 
 ## 📸 Portfolio Snapshots
 
-After a real execution, you can generate versioned snapshots using the analyzer:
+After a real execution, you can generate versioned analysis snapshots:
 
-```bash
+``` bash
 npm run analyze:real:snapshot "<path>/playwright-report.json"
 ```
 
 Snapshots are stored under:
 
-```
-out/examples/
-```
+    out/examples/
 
-They serve as **proof of execution and analysis** for portfolio and documentation.
+These snapshots serve as:
 
----
+-   📂 Execution proof
+-   📊 AI analysis evidence
+-   🧾 Case study material
+-   🎯 Recruiter-ready documentation
+
+------------------------------------------------------------------------
+
+## 🧪 Testing Philosophy
+
+  Layer         Responsibility
+  ------------- -----------------------------
+  API Client    Prepare & clean test data
+  Page Object   Perform UI interactions
+  Test Spec     Validate business behavior
+  AI Analyzer   Interpret execution results
+
+This layered approach demonstrates **advanced QA automation design
+maturity**.
+
+------------------------------------------------------------------------
 
 ## 🔄 CI/CD Ready
 
-This project is prepared for:
+Prepared for:
 
-- GitHub Actions
-- Jenkins pipelines
-- Regression suites
-- Scheduled runs
+-   GitHub Actions
+-   Jenkins pipelines
+-   Regression suites
+-   Scheduled executions
+-   AI post-processing automation
 
-Reports and artifacts can be archived automatically.
-
----
+------------------------------------------------------------------------
 
 ## 🎯 Project Goals
 
-✔ Build reliable automated tests  
-✔ Produce real execution evidence  
-✔ Enable AI-driven insights  
-✔ Serve as a public QA portfolio  
-✔ Demonstrate modern testing practices  
+✔ Build reliable automated tests\
+✔ Produce real execution evidence\
+✔ Enable AI-driven insights\
+✔ Demonstrate architectural maturity\
+✔ Serve as an advanced QA portfolio project
 
----
+------------------------------------------------------------------------
 
 ## 👨‍💻 Author
 
-**Maicon Fang**  
-QA Engineer | Automation | AI in Testing  
+**Maicon Fang**\
+QA Engineer \| Automation \| AI in Testing
 
-🔗 GitHub: https://github.com/maiconfang  
-🔗 Portfolio: https://maiconfang.github.io/portfolio/
+GitHub: https://github.com/maiconfang\
+Portfolio: https://maiconfang.github.io/portfolio/
 
----
+------------------------------------------------------------------------
 
 ## 📜 License
 
