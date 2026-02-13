@@ -1,20 +1,37 @@
-// import { test } from '@playwright/test';
-// import { ProvincePage } from '../../pages/ProvincePage';
-// import { createProvince, deleteProvince } from '../../api/provinceClient';
+import { test, expect } from '@playwright/test';
+import { ProvincePage } from '../../pages/ProvincePage';
+import { createProvince, getProvinceById, listProvinces } from '../../api/provinceClient';
 
-// test.describe('Province Delete (API Setup)', () => {
-//   test('should delete a province via UI', async ({ page }) => {
-//     const provincePage = new ProvincePage(page);
+test.describe('Province Delete (API-driven)', () => {
+  test('should delete a province via UI and validate removal', async ({ page }) => {
+    const provincePage = new ProvincePage(page);
 
-//     const name = `Delete Province Auto ${Date.now()}`;
-//     const province = await createProvince(name, 'DP');
+    const name = `Delete Province Auto ${Date.now()}`;
 
-//     await provincePage.goto();
-//     await provincePage.searchByName(name);
-//     await provincePage.deleteProvinceByName(name);
+    // Setup via API (stable + fast)
+    const province = await createProvince(name, 'DP');
 
-//     await provincePage.expectSuccessToast(/Successfully/i);
+    // UI: delete
+    await provincePage.goto();
+    await provincePage.searchByName(name);
+    await provincePage.expectProvinceInTable(name);
 
-//     await deleteProvince(province.id); // fallback cleanup
-//   });
-// });
+    await provincePage.deleteProvinceByName(name);
+
+    // Toast (UI feedback)
+    await provincePage.expectToastMessage('Successfully Removed');
+
+    // UI: row disappears (handles async grid refresh)
+    await provincePage.expectProvinceNotInTable(name);
+
+    // API: ground-truth validation (either 404 or not present)
+    const res = await getProvinceById(province.id);
+    if (res.status() === 404) {
+      expect(res.status()).toBe(404);
+    } else {
+      const provinces = await listProvinces();
+      const stillExists = Array.isArray(provinces) && provinces.some((p: any) => p.id === province.id);
+      expect(stillExists).toBeFalsy();
+    }
+  });
+});

@@ -80,14 +80,16 @@ This ensures:
 
 ------------------------------------------------------------------------
 
-## 🔐 Authentication (Login Once -- Session Reuse)
 
-UI tests use **Playwright storageState** to avoid logging in on every
-test.
+# 🔐 Authentication (Login Once -- Session Reuse)
 
-### First Run (Generate Session)
+UI tests use **Playwright storageState** to avoid logging in on every test.
 
-``` powershell
+The session is created once using `global-setup.ts` and reused across all tests.
+
+## First Run (Generate Session)
+
+```powershell
 $env:APP_BASE_URL="http://192.168.2.12:4200"
 $env:E2E_USER="luna.moon@maif.com"
 $env:E2E_PASS="123"
@@ -97,7 +99,107 @@ npx playwright test
 
 This generates:
 
-    ui-tests/.auth/storageState.json
+ui-tests/.auth/storageState.json
+
+> The `.auth` folder is intentionally ignored by Git.
+> It contains local session data only.
+
+---
+
+## ⚠️ Important — Correct Session Folder
+
+The project **must use only one session location**:
+
+ui-tests/.auth/storageState.json
+
+If you see something like:
+
+ui-tests/ui-tests/.auth/
+ui-tests/_auth/
+
+You can safely delete it — it was created by a previous path misconfiguration.
+
+---
+
+## Session Expiration Behavior (Debug Mode)
+
+When running tests normally, the session rarely expires.
+
+However, during:
+
+--debug  
+--headed  
+manual stepping  
+API restart  
+
+the OAuth access token may expire.
+
+When this happens the application shows:
+
+"Application without access permission"
+
+This is NOT a test failure.
+It means the session expired while debugging.
+
+---
+
+## How Tests Handle It
+
+The test framework includes an **automatic re-login guard**:
+
+1. Test navigates to a protected page
+2. If session is invalid
+3. Test performs login again automatically
+4. Continues execution
+
+This allows debugging without manually logging in repeatedly.
+
+---
+
+## If the Session Becomes Invalid
+
+Simply delete the session file and rerun:
+
+ui-tests/.auth/storageState.json
+
+Then run again:
+
+npx playwright test
+
+---
+
+# ▶️ Running Tests
+
+Run all tests:
+
+npx playwright test
+
+Run with UI:
+
+npx playwright test --headed
+
+Run in debug mode:
+
+npx playwright test --debug --headed
+
+> Debug mode is slower and may trigger session expiration.
+> The framework will automatically recover the session.
+
+---
+
+# 🧪 Debug Evidence (Login Failures)
+
+If login cannot be completed, debug artifacts are generated:
+
+ui-tests/.auth/debug/
+
+This may include:
+
+- Screenshot
+- Page HTML
+- URL log
+
+These files help identify selector or environment issues.
 
 ------------------------------------------------------------------------
 

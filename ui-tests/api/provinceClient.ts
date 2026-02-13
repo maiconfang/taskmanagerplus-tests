@@ -37,3 +37,35 @@ export async function deleteProvince(id: number) {
     }
   });
 }
+
+export async function listProvinces() {
+  const token = await getAccessToken();
+  const context = await request.newContext();
+
+  const response = await context.get(`${BASE_URL}/v1/provinces`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  });
+
+  if (!response.ok()) {
+    throw new Error(`List failed: ${response.status()}`);
+  }
+
+  return response.json();
+}
+
+export async function getProvinceById(id: number) {
+  const token = await getAccessToken();
+  const context = await request.newContext();
+
+  const response = await context.get(`${BASE_URL}/v1/provinces/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  });
+
+  return response;
+}

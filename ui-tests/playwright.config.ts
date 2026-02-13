@@ -6,8 +6,6 @@ export default defineConfig({
   testDir: './tests',
   timeout: 30 * 1000,
 
-  // ✅ Playwright config type expects a file path (string), not an imported function.
-  // This will run ui-tests/global-setup.ts once and generate the storageState.
   globalSetup: require.resolve('./global-setup'),
 
   reporter: [
@@ -21,11 +19,13 @@ export default defineConfig({
     video: 'retain-on-failure',
     trace: 'on',
 
-    // Standardize on APP_BASE_URL (same as testConfig.baseUrl)
+    // Standardize on APP_BASE_URL (used by global-setup too)
     baseURL: process.env.APP_BASE_URL || 'http://192.168.2.12:4200',
 
     // Reuse the logged-in session for all tests
-    storageState: path.resolve(__dirname, '.auth/storageState.json')
+    storageState: process.env.AUTH_STATE_PATH
+      ? path.resolve(__dirname, process.env.AUTH_STATE_PATH)
+      : path.resolve(__dirname, '.auth/storageState.json'),
   },
 
   projects: [

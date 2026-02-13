@@ -88,6 +88,29 @@ export class ProvincePage extends BasePage {
   }
 
 
+
+  private rowByName(name: string): Locator {
+    return this.page.locator('tbody tr', { hasText: name }).first();
+  }
+
+  async deleteProvinceByName(name: string): Promise<void> {
+    const row = this.rowByName(name);
+    await expect(row).toBeVisible();
+
+    // Trash icon (remove) inside the row
+    await row.locator('#action-remove-province').click();
+
+    // Confirmation dialog -> Yes
+    await this.page.locator('#dialog-confirmation-yes').click();
+  }
+
+  async expectProvinceNotInTable(name: string): Promise<void> {
+    const row = this.rowByName(name);
+    await expect
+      .poll(async () => await row.count(), { timeout: 15000 })
+      .toBe(0);
+  }
+
   async expectProvinceInTable(name: string): Promise<void> {
     const row = this.page.locator('tbody tr', { hasText: name }).first();
 
