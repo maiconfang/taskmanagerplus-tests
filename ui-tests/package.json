@@ -6,7 +6,10 @@
   "scripts": {
     "clean": "rimraf test-results reports/ui",
     "test": "playwright test",
-    "test:ci": "npm run clean && playwright test"
+    "test:ci": "npm run clean && playwright test",
+    "test:failures": "playwright test tests/failure-scenarios",
+    "test:failures:ui": "playwright test tests/failure-scenarios/ui",
+    "test:failures:api": "playwright test tests/failure-scenarios/api"
   },
   "keywords": [
     "qa",

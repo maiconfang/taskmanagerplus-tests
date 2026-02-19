@@ -69,3 +69,54 @@ export async function getProvinceById(id: number) {
 
   return response;
 }
+
+
+// ------------------------------
+// Failure-scenario helpers (raw responses)
+// These functions DO NOT throw on non-2xx, so tests can assert failure modes.
+// ------------------------------
+
+export async function listProvincesRaw(token?: string) {
+  const context = await request.newContext();
+  return context.get(`${BASE_URL}/v1/provinces`, {
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      'Content-Type': 'application/json'
+    }
+  });
+}
+
+export async function createProvinceRaw(
+  data: { name?: string; abbreviation?: string },
+  options?: { token?: string; contentType?: string }
+) {
+  const context = await request.newContext();
+  const contentType = options?.contentType ?? 'application/json';
+
+  // If not JSON, send as plain text (simulates client misconfiguration)
+  const payload: any =
+    contentType === 'application/json' ? { data } : { data: JSON.stringify(data) };
+
+  return context.post(`${BASE_URL}/v1/provinces`, {
+    headers: {
+      ...(options?.token ? { Authorization: `Bearer ${options.token}` } : {}),
+      'Content-Type': contentType
+    },
+    ...payload
+  });
+}
+
+export async function updateProvinceRaw(
+  id: number,
+  data: { name?: string; abbreviation?: string },
+  token?: string
+) {
+  const context = await request.newContext();
+  return context.put(`${BASE_URL}/v1/provinces/${id}`, {
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      'Content-Type': 'application/json'
+    },
+    data
+  });
+}

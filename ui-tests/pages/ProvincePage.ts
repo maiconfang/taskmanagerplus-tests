@@ -15,6 +15,10 @@ export class ProvincePage extends BasePage {
   readonly nameInput: Locator;
   readonly abbreviationInput: Locator;
 
+  // Table (empty state)
+  readonly firstRowNameCell: Locator;
+  readonly firstRowAbbreviationCell: Locator;
+
   constructor(page: Page) {
     super(page);
 
@@ -29,6 +33,10 @@ export class ProvincePage extends BasePage {
     // Register
     this.nameInput = page.locator('#province-name');
     this.abbreviationInput = page.locator('#province-abbreviation');
+
+    // Table (first row cells)
+    this.firstRowNameCell = page.locator('tbody tr').first().locator('#column-province-name');
+    this.firstRowAbbreviationCell = page.locator('tbody tr').first().locator('#column-province-abbreviation');
   }
 
   async goto(): Promise<void> {
@@ -116,6 +124,19 @@ export class ProvincePage extends BasePage {
 
     await expect.poll(async () => await row.count(), { timeout: 15000 }).toBeGreaterThan(0);
     await expect(row).toBeVisible();
+  }
+
+
+  /**
+   * Empty search state for this screen renders a single blank row (not zero rows).
+   * This can happen when the user searches for a province that does not exist.
+   */
+  async expectEmptySearchResult(): Promise<void> {
+    await expect.poll(async () => {
+      const name = (await this.firstRowNameCell.innerText()).trim();
+      const abbr = (await this.firstRowAbbreviationCell.innerText()).trim();
+      return { name, abbr };
+    }, { timeout: 15000 }).toEqual({ name: '', abbr: '' });
   }
 
   async expectToastMessage(expectedText: string): Promise<void> {
