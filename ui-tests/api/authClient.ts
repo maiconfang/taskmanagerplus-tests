@@ -1,10 +1,8 @@
-
-// api/authClient.ts
 import { request } from '@playwright/test';
 
 let cachedToken: string | null = null;
 
-export async function getAccessToken() {
+export async function getAccessToken(): Promise<string> {
   if (cachedToken) return cachedToken;
 
   const context = await request.newContext();
@@ -26,7 +24,7 @@ export async function getAccessToken() {
   }
 
   const body = await response.json();
-  cachedToken = body.access_token;
+  cachedToken = body.access_token as string;
 
   return cachedToken;
 }

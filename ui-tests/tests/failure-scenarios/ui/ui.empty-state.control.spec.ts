@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { ProvincePage } from '../../pages/ProvincePage';
+import { ProvincePage } from '../../../pages/ProvincePage';
 
 /**
  * Failure Scenario (UI / Empty State):
