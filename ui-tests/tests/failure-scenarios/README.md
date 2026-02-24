@@ -10,6 +10,9 @@ This folder contains **negative** and **intentionally failing** tests designed t
 - `task/`
   - `api/` API failure scenarios for Task endpoints
   - `ui/` UI failure scenarios for Task screens
+- `users/`
+  - `api/` API failure scenarios for User endpoints
+  - `ui/` UI failure scenarios for User screens 
 - `group/`
   - Placeholders to keep the structure consistent. Implement when ready.
 
@@ -40,6 +43,11 @@ From inside the `ui-tests` folder:
 npx playwright test tests/failure-scenarios
 ```
 
+``` bash
+npx playwright test tests/failure-scenarios --project=chromium
+```
+
+
 This runs: - Province failures - Task failures - Group failures - API
 and UI negative scenarios
 
@@ -63,6 +71,15 @@ npx playwright test tests/failure-scenarios/province
 
 ``` bash
 npx playwright test tests/failure-scenarios/group
+```
+
+### ▶ User Only
+
+``` bash
+npx playwright test tests/failure-scenarios/users
+```
+```bash
+npx playwright test tests/failure-scenarios/users/api --project=chromium
 ```
 
 ------------------------------------------------------------------------
