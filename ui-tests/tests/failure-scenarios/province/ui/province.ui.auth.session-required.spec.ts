@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { ProvincePage } from '../../../pages/ProvincePage';
+import { ProvincePage } from '../../../../pages/ProvincePage';
 
 /**
  * Failure Scenario (UI / Auth):
@@ -7,7 +7,7 @@ import { ProvincePage } from '../../../pages/ProvincePage';
  * This test intentionally assumes the user is already authenticated and will FAIL
  * when the app redirects to login.
  */
-test.describe('[FailureScenario][UI][Auth] Province page requires session', () => {
+test.describe('[FailureScenario][Province][UI][Auth] Province page requires session', () => {
   test.use({ storageState: { cookies: [], origins: [] } });
 
   test('should open Province page without login (intentional failure)', async ({ page }) => {

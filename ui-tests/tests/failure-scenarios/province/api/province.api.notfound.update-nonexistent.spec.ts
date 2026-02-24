@@ -1,13 +1,13 @@
 import { test, expect } from '@playwright/test';
-import { getAccessToken } from '../../../api/authClient';
-import { updateProvinceRaw } from '../../../api/provinceClient';
+import { getAccessToken } from '../../../../api/authClient';
+import { updateProvinceRaw } from '../../../../api/provinceClient';
 
 /**
  * Failure Scenario (API / Not Found):
  * Realistic situation: UI tries to update a record that was deleted by another user/process.
  * The API should respond 404 (or similar). This test intentionally expects 200 and will FAIL.
  */
-test.describe('[FailureScenario][API][NotFound] Update deleted/non-existing record', () => {
+test.describe('[FailureScenario][Province][API][NotFound] Update deleted/non-existing record', () => {
   test('should update a non-existing province id (intentional failure)', async () => {
     const token = await getAccessToken();
 

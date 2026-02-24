@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { ProvincePage } from '../../../pages/ProvincePage';
+import { ProvincePage } from '../../../../pages/ProvincePage';
 
 /**
  * Failure Scenario (UI / Timing):
@@ -7,7 +7,7 @@ import { ProvincePage } from '../../../pages/ProvincePage';
  * This test intentionally uses an unrealistically small timeout to trigger a timing failure,
  * producing a classic Playwright error (timeout / element not found) that the Analyzer can learn from.
  */
-test.describe('[FailureScenario][UI][Timing] Grid refresh race', () => {
+test.describe('[FailureScenario][Province][UI][Timing] Grid refresh race', () => {
   test('should find Ontario immediately after searching (intentional timing failure)', async ({ page }) => {
     const provincePage = new ProvincePage(page);
 

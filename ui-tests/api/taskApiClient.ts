@@ -17,7 +17,7 @@ export class TaskApiClient {
   private async newContext(): Promise<APIRequestContext> {
     const token = await getAccessToken();
 
-    // Se você já tem BASE_URL em algum lugar, pode usar aqui.
+    // Use API_BASE_URL when available to keep local/CI environments configurable.
     const baseURL = process.env.API_BASE_URL ?? 'http://192.168.2.12:8080';
 
     return await request.newContext({
@@ -37,10 +37,10 @@ export class TaskApiClient {
 
     const json = (await res.json()) as Partial<TaskDto>;
 
-    // Se o backend retornar id direto:
+    // If the backend returns the id directly:
     if (typeof json.id === 'number') return json as TaskDto;
 
-    // Fallback: se não vier id, tenta buscar por title no "noPagination"
+    // Fallback: if id is not returned, try to locate the record using the noPagination endpoint by title.
     const find = await context.get(`/v1/tasks/noPagination?title=${encodeURIComponent(input.title)}`);
     expect(find.ok(), `Find task failed: ${find.status()}`).toBeTruthy();
 
