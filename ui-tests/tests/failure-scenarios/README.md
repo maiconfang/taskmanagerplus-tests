@@ -66,6 +66,9 @@ npx playwright test tests/failure-scenarios/task
 ``` bash
 npx playwright test tests/failure-scenarios/province
 ```
+```bash
+npx playwright test tests/failure-scenarios/province/api --project=chromium
+```
 
 ### ▶ Group Only
 

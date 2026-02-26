@@ -166,24 +166,35 @@ Then run again:
 
 npx playwright test
 
----
+------------------------------------------------------------------------
 
-# ▶️ Running Tests
+## ▶️ Running Tests
 
-Run all tests:
+### ▶ Only with chrome
 
-npx playwright test
+``` bash
+npx playwright test --project=chromium
+```
 
-Run with UI:
+### ▶ Only Failure Scenarios
 
-npx playwright test --headed
+``` bash
+npx playwright test tests/failure-scenarios --project=chromium
+```
 
-Run in debug mode:
 
-npx playwright test --debug --headed
+### ▶ Only with UI
 
-> Debug mode is slower and may trigger session expiration.
-> The framework will automatically recover the session.
+``` bash
+npx playwright test --project=chromium --headed
+```
+
+### ▶ With Debug
+
+``` bash
+npx playwright test --project=chromium --debug
+```
+
 
 ---
 
