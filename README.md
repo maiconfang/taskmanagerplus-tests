@@ -249,13 +249,27 @@ npx playwright test --debug
 
 ------------------------------------------------------------------------
 
-## 📊 Reports
+## 📊 Reports & Failure Artifacts
 
-After execution, Playwright generates:
+After execution, Playwright generates structured reports and rich failure artifacts that are used by the AI Analyzer.
 
--   📄 HTML Report
--   📄 JSON Report
--   📂 Trace files
+### Generated Outputs
+
+- 📄 **HTML Report**  
+  Interactive visual report for manual inspection.
+
+- 📄 **JSON Report (`playwright-report.json`)**  
+  Structured execution data used by the AI Analyzer for automated root cause analysis.
+
+- 📂 **Test Results Directory (`test-results/`) | (`C:\dev\workspace\taskmanagerplus-tests\ui-tests\test-results`)** 
+  Contains detailed artifacts for each failed test, including:
+  
+  - 🖼 Screenshots (captured at failure time)
+  - 🎥 Video recordings of the test execution
+  - 📄 `error-context.md` with assertion and stack trace details
+  - 🧵 `trace.zip` (Playwright trace for deep debugging)
+
+These artifacts provide grounded evidence that enables the AI Analyzer to classify failures, identify patterns, and suggest corrective actions.
 
 Open report:
 
