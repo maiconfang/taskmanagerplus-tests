@@ -105,4 +105,40 @@ export class LoginPage {
     await logoutButton.scrollIntoViewIfNeeded();
     await logoutButton.click();
   }
+
+  // Expectations
+  async expectTitleVisible() {
+    await expect(this.title).toBeVisible();
+  }
+
+  async clickOnLoginField() {
+    await expect(this.loginInput).toBeVisible();
+    await expect(this.loginInput).toBeEnabled();
+    await this.loginInput.click();
+  }
+
+  // Click outside to trigger blur/validation
+  async blurInputs() {
+    await expect(this.title).toBeVisible();
+    await this.title.scrollIntoViewIfNeeded();
+    await this.title.click();
+  }
+
+  async expectWelcomeMessage(message: string) {
+    await expect(this.page.getByText(message, { exact: false })).toBeVisible();
+  }
+
+    async expectValidationMessage(message: string) {
+    await expect(this.page.getByText(message, { exact: false })).toBeVisible();
+  }
+
+    async clickOnPasswordField() {
+    await expect(this.passwordInput).toBeVisible();
+    await expect(this.passwordInput).toBeEnabled();
+    await this.passwordInput.click();
+  }
+
+    async expectLoginError(errorMessage: string) {
+    await expect(this.page.getByText(errorMessage, { exact: false })).toBeVisible();
+  }
 }
