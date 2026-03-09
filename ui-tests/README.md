@@ -191,7 +191,11 @@ npm run test:failures:ui
 # API-only (Playwright request-based)
 npm run test:failures:api
 
-# Only with chrome
+# Only with chrome all tests
+PS C:\dev\workspace\taskmanagerplus-tests\ui-tests> npx playwright test --project=chromium
+
+
+# Only with chrome and failure-scenarios 
 PS C:\dev\workspace\taskmanagerplus-tests\ui-tests> npx playwright test tests/failure-scenarios --project=chromium
 ```
 
